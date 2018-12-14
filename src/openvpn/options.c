@@ -577,6 +577,8 @@ static const char usage_message[] =
     "--dh file       : File containing Diffie Hellman parameters\n"
     "                  in .pem format (for --tls-server only).\n"
     "                  Use \"openssl dhparam -out dh1024.pem 1024\" to generate.\n"
+    "--nh_mode [1,2,3] : NEWHOPE mode.  See openssl for meanings.\n"
+    "--nh_a [name]     : Named NEWHOPE parameter.\n"
     "--cert file     : Local certificate in .pem format -- must be signed\n"
     "                  by a Certificate Authority in --ca file.\n"
     "--extra-certs file : one or more PEM certs that complete the cert chain.\n"
@@ -7722,6 +7724,16 @@ add_option(struct options *options,
         {
             options->dh_file_inline = p[2];
         }
+    }
+    else if (streq(p[0], "nh_mode") && p[1] && !p[2])
+    {
+        errno = 0;
+        options->nh_mode = strtol(p[1], NULL, 10);
+        if(errno) goto err;
+    }
+    else if(streq(p[0], "nh_a") && p[1] && !p[2])
+    {
+        options->nh_a = p[1];
     }
     else if (streq(p[0], "cert") && p[1] && ((streq(p[1], INLINE_FILE_TAG) && p[2]) || !p[2]) && !p[3])
     {

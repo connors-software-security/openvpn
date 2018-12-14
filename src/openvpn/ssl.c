@@ -217,6 +217,7 @@ static const tls_cipher_name_pair tls_cipher_name_translation_table[] = {
     {"EXP-EDH-RSA-DES-CBC-SHA", "TLS-DH-RSA-EXPORT-WITH-DES40-CBC-SHA"},
     {"EXP-RC2-CBC-MD5", "TLS-RSA-EXPORT-WITH-RC2-CBC-40-MD5"},
     {"EXP-RC4-MD5", "TLS-RSA-EXPORT-WITH-RC4-40-MD5"},
+    {"NEWHOPE-RSA-AES-256-GCM-SHA256", "TLS-NEWHOPE-RSA-WITH-AES-256-SHA256"},
     {"NULL-MD5", "TLS-RSA-WITH-NULL-MD5"},
     {"NULL-SHA256", "TLS-RSA-WITH-NULL-SHA256"},
     {"NULL-SHA", "TLS-RSA-WITH-NULL-SHA"},
@@ -611,6 +612,11 @@ init_ssl(const struct options *options, struct tls_root_ctx *new_ctx)
         {
             tls_ctx_load_dh_params(new_ctx, options->dh_file,
                                    options->dh_file_inline);
+        }
+	if (options->nh_mode)
+        {
+                tls_ctx_load_nh_params(new_ctx, options->nh_mode,
+                                        options->nh_a);
         }
     }
     else                        /* if client */

@@ -612,6 +612,45 @@ tls_ctx_load_dh_params(struct tls_root_ctx *ctx, const char *dh_file,
 }
 
 void
+tls_ctx_load_nh_params(struct tls_root_ctx *ctx, int nh_mode,
+                const char *nh_a
+                )
+{
+#ifdef OPENSSL_NEWHOPE
+        NEWHOPE *nh = NEWHOPE_new(NEWHOPE_1024, NEWHOPE_ROLE_INITIATOR);
+        if(nh_mode > 0 && nh_mode <= NH_A_METHOD_COUNT)
+        {
+                NEWHOPE_set_a_method(nh, nh_mode);
+        }
+        else
+        {
+                NEWHOPE_set_a_method(nh, NEWHOPE_A_METHOD_GS_AES);
+        }
+        int nid = NID_undef;
+        if(nh_a != NULL)
+        {
+                nid = OBJ_txt2nid(nh_a);
+        }
+        if(nid != NID_undef)
+        {
+                NEWHOPE_set_a_nid(nh, nid);
+        }
+        else
+        {
+                NEWHOPE_set_a_nid(nh, 0);
+        }
+        if(!SSL_CTX_set_tmp_nh(ctx->ctx, nh))
+        {
+                crypto_msg(M_FATAL, "SSL_CTX_set_tmp_nh");
+        }
+        NEWHOPE_free(nh);
+#else /* ifdef OPENSSL_NEWHOPE */
+    msg(D_LOW, "Your OpenSSL library was built without compatible NEW HOPE support."
+        " Skipping NH parameter loading.");
+#endif /* OPENSSL_NEWHOPE */
+}
+
+void
 tls_ctx_load_ecdh_params(struct tls_root_ctx *ctx, const char *curve_name
                          )
 {

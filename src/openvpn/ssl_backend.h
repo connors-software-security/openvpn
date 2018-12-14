@@ -218,7 +218,16 @@ void tls_ctx_check_cert_time(const struct tls_root_ctx *ctx);
  */
 void tls_ctx_load_dh_params(struct tls_root_ctx *ctx, const char *dh_file,
                             const char *dh_file_inline);
-
+/**
+ * Load NEW HOPE Parameters, and load them into the library-specific
+ * TLS context.
+ *
+ * @param ctx          TLS context to use
+ * @param nh_mode      The NEW HOPE parameter mode to use: 1, 2 or 3 (see openssl for definitions
+ * @param nh_a         A specified NEW HOPE parameter
+ */
+void tls_ctx_load_nh_params(struct tls_root_ctx *ctx, int nh_mode,
+                            const char *nh_a);
 /**
  * Load Elliptic Curve Parameters, and load them into the library-specific
  * TLS context.

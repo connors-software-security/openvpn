@@ -509,6 +509,8 @@ struct options
     const char *ca_file;
     const char *ca_path;
     const char *dh_file;
+    int nh_mode;
+    const char* nh_a;
     const char *cert_file;
     const char *extra_certs_file;
     const char *priv_key_file;
